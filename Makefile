@@ -53,15 +53,18 @@ isort: ## run isort on python source files
 	isort -rc problem_builder
 
 test.quality: selfcheck ## run quality checkers on the codebase
-	tox -e quality
+	tox -e quality -- --max-workers=2
 
 test.unit: ## run all unit tests
-	tox -- $(TEST)
+	tox -- $(TEST) --max-workers=2
 
 test.integration: ## run all integration tests
-	tox -e integration -- $(TEST)
+	tox -e integration -- $(TEST) --max-workers=2
 
-test: test.unit test.integration test.quality ## Run all tests
+test: ## Run all tests
+	$(MAKE) test.unit
+	$(MAKE) test.integration
+	$(MAKE) test.quality
 
 install_firefox:
 	@mkdir -p external
